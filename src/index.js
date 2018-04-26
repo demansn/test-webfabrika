@@ -2,7 +2,7 @@ import Hero from './js/Hero.js';
 import NPC from './js/NPC.js';
 
 const gameCanvas = document.getElementById('game-canvas');
-const app        = new PIXI.Application(800, 600, {backgroundColor:0x1099bb, view: gameCanvas});
+const app        = new PIXI.Application(1024, 768, {backgroundColor:0x1099bb, view: gameCanvas});
 const gameObjects = [];
 const spritesData = {
 	moveForward: 'sniper_move_cam_180_000\\d+',
@@ -40,7 +40,7 @@ const spawnHero = function() {
 
 	const hero = spawnHuman(Hero);
 
-	hero.position.set(100, 100);
+	hero.position.set(200, 100);
 	hero.on('died', () => spawnHero(), this);
 };
 
@@ -48,7 +48,7 @@ const spawnNPC = function() {
 
 	const npc = spawnHuman(NPC);
 
-	npc.position.set(200, 100);
+	npc.position.set(300, 100);
 	npc.on('died', () => spawnNPC(), this);
 };
 
@@ -74,7 +74,12 @@ const removeGameObject = function(gameObject) {
 const collisionTest = function() {
 
 	gameObjects.forEach( go => {
-		if (go.x + go.width / 2 >= app.screen.width || go.y + go.height / 2 >= app.screen.height) {
+
+		const isLeftCollision   = go.x - go.width / 2 <= 0;
+		const isRightCollision  = go.x + go.width / 2 >= app.screen.width;
+		const isBottomCollision = go.y + go.height / 2 >= app.screen.height;
+
+		if (isLeftCollision || isRightCollision || isBottomCollision) {
 			go.death();
 		}
 	});
